@@ -1,0 +1,1 @@
+C:\Users\gonza\AppData\Local\Programs\Python\Python39\Lib\site-packages\qt6_applications\Qt\bin
