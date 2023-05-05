@@ -27,9 +27,8 @@ class Highlighter(QSyntaxHighlighter):
             (QRegExp("\\b[0-9]+\\b"), self.numbers_format),  # Integer numbers
             (QRegExp("\\b[0-9]*\\.[0-9]+\\b"),
              self.numbers_format),  # Real numbers
-            # Single line comments
-            (QRegExp("//[^\n]*"), self.comments_format),
-            (QRegExp("/\\*.*\\*/"), self.comments_format)  # Multi-line comments
+            (QRegExp("/\\*[^*]*\\*+(?:[^*/][^*]*\\*+)*/"), self.comments_format), # Multi-line comments
+            (QRegExp("//[^\n]*"), self.comments_format) # Single line comments
         ]
 
     def highlightBlock(self, text):
