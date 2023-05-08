@@ -183,9 +183,9 @@
    <widget class="QPlainTextEdit" name="plainTextEditCode">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>60</x>
       <y>20</y>
-      <width>651</width>
+      <width>631</width>
       <height>471</height>
      </rect>
     </property>
@@ -747,7 +747,7 @@ color: rgb(0,0,0);</string>
      </attribute>
      <widget class="QPlainTextEdit" name="plainTextEdit_Lexico">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -770,7 +770,7 @@ background-color: rgb(36,39,49);</string>
      </attribute>
      <widget class="QPlainTextEdit" name="plainTextEdit_Sintactico">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -792,7 +792,7 @@ background-color: rgb(36,39,49);</string>
      </attribute>
      <widget class="QPlainTextEdit" name="plainTextEdit_Semantico">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -814,7 +814,7 @@ background-color: rgb(36,39,49);</string>
      </attribute>
      <widget class="QPlainTextEdit" name="plainTextEdit_CI">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -1029,7 +1029,7 @@ QTabBar::tab {
      </attribute>
      <widget class="QPlainTextEdit" name="plainTextEdit_Error">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -1173,7 +1173,7 @@ color: rbg(187, 187, 187);</string>
      </attribute>
      <widget class="QPlainTextEdit" name="plainTextEdit_Result">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -1416,6 +1416,32 @@ color:rgb(187, 187, 187)</string>
      </widget>
     </widget>
    </widget>
+   <widget class="QTextEdit" name="textEditLineNumber">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>41</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(34, 39, 49);
+color: rgb(187,187,187);
+border: 0.5px solid rgb(34, 49, 49);</string>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAsNeeded</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -1451,7 +1477,11 @@ color:rgb(187, 187, 187)</string>
     <property name="title">
      <string>Compile</string>
     </property>
-    <addaction name="actionCompile"/>
+    <addaction name="actionLexico"/>
+    <addaction name="actionSintactico"/>
+    <addaction name="actionSemantico"/>
+    <addaction name="actionCodigo_Intermedio"/>
+    <addaction name="actionCompile_all"/>
    </widget>
    <widget class="QMenu" name="menuFormat">
     <property name="title">
@@ -1613,9 +1643,29 @@ color:rgb(187, 187, 187)</string>
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionCompile">
+  <action name="actionLexico">
    <property name="text">
-    <string>Compile</string>
+    <string>Lexico</string>
+   </property>
+  </action>
+  <action name="actionSintactico">
+   <property name="text">
+    <string>Sintactico</string>
+   </property>
+  </action>
+  <action name="actionSemantico">
+   <property name="text">
+    <string>Semantico</string>
+   </property>
+  </action>
+  <action name="actionCodigo_Intermedio">
+   <property name="text">
+    <string>Codigo Intermedio</string>
+   </property>
+  </action>
+  <action name="actionCompile_all">
+   <property name="text">
+    <string>Compile all</string>
    </property>
   </action>
  </widget>
