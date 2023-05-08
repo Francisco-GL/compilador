@@ -65,16 +65,20 @@ def lexer(code):
                     token_type = 'ID'
 
             elif match.group(3):
+                response = validNumber(lexeme)
                 if '.' in lexeme:
-                    if validNumber(lexeme):
+                    if response[0]:
                         token_type = 'FLOAT'
                     else:
+                        for error in response[1]:
+                            temp_errors.append({'message': '{} is an invalid symbol'.format(error['message']),
+                                                'row': (row + 2),
+                                                'col': col})
+                        for newToken in reversed(response[2]):
+                            token2 = {'type': newToken['type'],
+                                    'lexeme': newToken['lexeme'], 'row': (row + 1), 'col': col}
+                            temp_tokens.append(token2)
                         token_type = 'INVALID_FLOAT'
-                        temp_errors.append({
-                            'message': '{} is not a valid float'.format(lexeme),
-                            'row': row,
-                            'col': col
-                        })
                 else:
                     token_type = 'INTEGER'
             elif match.group(4):
@@ -127,12 +131,43 @@ def validName(name):
         return False
 
 
+
 def validNumber(expresion):
+    expresionSplit = expresion.split(".")
+
+    numbersGroup = []
+    errors = []
+    floatNumber = ''
+    cont = 0
+    if len(expresionSplit) > 2:
+        if len(expresionSplit) % 2 != 0:
+            numbersGroup.append({'type': 'INTEGER',
+                         'lexeme': expresionSplit[-1], 'row': 0, 'col': 0})
+            expresionSplit.pop()
+
+        for number in expresionSplit:
+            if floatNumber == '':
+                floatNumber += number + '.'
+                cont += 1
+            else:
+                floatNumber += number
+                cont += 1
+
+            print(f'floatNumber: {floatNumber}')
+
+            if cont == 2:
+                numbersGroup.append({'type': 'FLOAT',
+                         'lexeme': floatNumber, 'row': 0, 'col': 0})
+                errors.append(
+                    {'message': '.', 'row': 0, 'col': 0})
+                floatNumber = ''
+                cont = 0
+
     try:
         float(expresion)
-        return True
+        return [True]
     except ValueError:
-        return False
+        return [False, errors, numbersGroup]
 
 
 if len(sys.argv) > 1:
