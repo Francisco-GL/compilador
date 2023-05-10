@@ -6,8 +6,8 @@ def lexer(code):
     keywords = ['main', 'if', 'then', 'else', 'end', 'do', 'while',
                 'repeat', 'until', 'cin', 'cout', 'real', 'int', 'boolean']
     punctuations = ['(', ')', '{', '}', ',', ';']
-    operators = ['+=', '++', '--', '*', '/', '%', '<',
-                 '<=', '>', '>=', '==', '!=', ':=', '=', '+', '-']
+    operators = ['+=', '++', '--', '*', '/', '%', '<=',
+                 '>=', '<', '>', '==', '!=', ':=', '=', '+', '-']
 
     keyword_pattern = '|'.join('\\b{}\\b'.format(kw) for kw in keywords)
     id_pattern = '[a-zA-Z][a-zA-Z0-9]*'
@@ -17,7 +17,7 @@ def lexer(code):
     multiline_comment_pattern = r"/\*.*?\*/"
     operator_pattern = '|'.join(re.escape(op) for op in operators)
     punctuation_pattern = '|'.join(re.escape(p) for p in punctuations)
-    ignore_pattern = r'[@%&]'
+    ignore_pattern = r'[@%&$!.]'
 
     left_multiline_comment_pattern = r"/\*"
     right_multiline_comment_pattern = r"\*/"
@@ -72,11 +72,11 @@ def lexer(code):
                     else:
                         for error in response[1]:
                             temp_errors.append({'message': '{} is an invalid symbol'.format(error['message']),
-                                                'row': (row + 2),
+                                                'row': row,
                                                 'col': col})
                         for newToken in reversed(response[2]):
                             token2 = {'type': newToken['type'],
-                                    'lexeme': newToken['lexeme'], 'row': (row + 1), 'col': col}
+                                      'lexeme': newToken['lexeme']}
                             temp_tokens.append(token2)
                         token_type = 'INVALID_FLOAT'
                 else:
@@ -93,7 +93,7 @@ def lexer(code):
             elif match.group(7):
                 token_type = 'PUNCTUATION'
 
-            elif re.match(r'[@%&]', lexeme):
+            elif re.match(r'[@%&$!.]', lexeme):
                 token_type = 'INVALID_SYMBOL'
                 temp_errors.append({
                     'message': '{} is an invalid symbol'.format(lexeme),
@@ -106,7 +106,7 @@ def lexer(code):
 
             if token_type not in ['INVALID_IDENTIFIER', 'INVALID_FLOAT', 'INVALID_SYMBOL']:
                 token = {'type': token_type,
-                         'lexeme': lexeme, 'row': row, 'col': col}
+                         'lexeme': lexeme}
                 temp_tokens.append(token)
             col += len(lexeme)
 
@@ -131,7 +131,6 @@ def validName(name):
         return False
 
 
-
 def validNumber(expresion):
     expresionSplit = expresion.split(".")
 
@@ -142,7 +141,7 @@ def validNumber(expresion):
     if len(expresionSplit) > 2:
         if len(expresionSplit) % 2 != 0:
             numbersGroup.append({'type': 'INTEGER',
-                         'lexeme': expresionSplit[-1], 'row': 0, 'col': 0})
+                                 'lexeme': expresionSplit[-1]})
             expresionSplit.pop()
 
         for number in expresionSplit:
@@ -153,11 +152,11 @@ def validNumber(expresion):
                 floatNumber += number
                 cont += 1
 
-            print(f'floatNumber: {floatNumber}')
+            # print(f'floatNumber: {floatNumber}')
 
             if cont == 2:
                 numbersGroup.append({'type': 'FLOAT',
-                         'lexeme': floatNumber, 'row': 0, 'col': 0})
+                                     'lexeme': floatNumber})
                 errors.append(
                     {'message': '.', 'row': 0, 'col': 0})
                 floatNumber = ''
@@ -177,8 +176,8 @@ if len(sys.argv) > 1:
     output_text = ''
     error_text = ''
     for token in tokens:
-        output_text += "clave: {}, lexema: {}, fila: {}, columna: {}\n".format(
-            token['type'], token['lexeme'], token['row'], token['col'])
+        output_text += "{}, lexema: {}\n".format(
+            token['type'], token['lexeme'])
     for error in errors:
         error_text += "Error: {}, fila: {}, columna: {}\n".format(
             error['message'], error['row'], error['col'])
