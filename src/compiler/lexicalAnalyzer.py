@@ -2,6 +2,7 @@ import re
 import sys
 
 
+
 def lexer(code):
     keywords = ['main', 'if', 'then', 'else', 'end', 'do', 'while',
                 'repeat', 'until', 'cin', 'cout', 'real', 'int', 'boolean']
