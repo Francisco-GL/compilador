@@ -153,8 +153,6 @@ def validNumber(expresion):
                 floatNumber += number
                 cont += 1
 
-            # print(f'floatNumber: {floatNumber}')
-
             if cont == 2:
                 numbersGroup.append({'type': 'FLOAT',
                                      'lexeme': floatNumber})
@@ -186,7 +184,7 @@ if len(sys.argv) > 1:
         f.write(output_text)
     with open(f'{sys.argv[1].split(".")[0]}_lexical_errors.txt', 'w') as f:
         f.write(error_text)
-    print(output_text)
+    print(f'output_text)
     print(f'errors -> {error_text}')
 else:
     print('Proporcione el archivo a analizar ...')
