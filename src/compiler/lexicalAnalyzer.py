@@ -2,7 +2,6 @@ import re
 import sys
 
 
-
 def lexer(code):
     keywords = ['main', 'if', 'then', 'else', 'end', 'do', 'while',
                 'repeat', 'until', 'cin', 'cout', 'real', 'int', 'boolean']
@@ -184,7 +183,7 @@ if len(sys.argv) > 1:
         f.write(output_text)
     with open(f'{sys.argv[1].split(".")[0]}_lexical_errors.txt', 'w') as f:
         f.write(error_text)
-    print(f'output_text)
+    print(output_text)
     print(f'errors -> {error_text}')
 else:
     print('Proporcione el archivo a analizar ...')
