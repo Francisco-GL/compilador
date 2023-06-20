@@ -1,0 +1,28 @@
+main{
+ int x,y;
+ float a,w;
+ z=2;w=3.24;x=z+w*3-6;y=12;
+while(z<=w){
+  if(i==1)
+    z=w;
+    i=2;
+     if(i!=5)
+        i=i+1;
+	if(i>5)
+	   i=2;
+	end
+      else
+	i=i-1;
+      end
+    else
+	y=x;
+   end	
+}//fin while
+cin r;
+
+x=0;
+do
+  x=x+5;
+  cout x;
+until(x>=100);
+}
