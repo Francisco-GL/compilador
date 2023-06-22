@@ -16,12 +16,13 @@ def createTokens(data):
 
 
 class Nodo:
-    def __init__(self, value, data=None):
+    def __init__(self, value=None, data=None):
         self.valor = value
         self.branchs = data if data else []
 
     def add_branch(self, branch):
         self.branchs.append(branch)
+
 
 class SyntacticAnlyzer:
     def __init__(self, tokens):
@@ -82,10 +83,10 @@ class SyntacticAnlyzer:
                 nodo_tipo = Nodo(
                     '-tipo', [Nodo(tipo_variable)])
                 nodo_declaracion_variable = Nodo(
-                    '-variable', [nodo_tipo])
+                    '', [nodo_tipo])
                 while self.getTokenActual().type == 'ID':
                     nodo_identificador = Nodo(
-                        '-identificador', [Nodo(self.getTokenActual().value)])
+                        '', [Nodo(self.getTokenActual().value)])
                     nodo_declaracion_variable.add_branch(nodo_identificador)
                     self.nextToken()
                     if self.getTokenActual().value == ',':
@@ -153,12 +154,12 @@ class SyntacticAnlyzer:
     def asignacion(self):
         nodo_asignacion = Nodo('-asignacion')
         nodo_identificador = Nodo(
-            '-identificador', [Nodo(self.getTokenActual().value)])
+            '', [Nodo(self.getTokenActual().value)])
         nodo_asignacion.add_branch(nodo_identificador)
         self.nextToken()
         if self.getTokenActual().value in ['=', '+=', '-=', '*=', '/=', '%=']:
             nodo_asignacion_op = Nodo(
-                '-asignacion_op', [Nodo(self.getTokenActual().value)])
+                '', [Nodo(self.getTokenActual().value)])
             nodo_asignacion.add_branch(nodo_asignacion_op)
             self.nextToken()
             nodo_sent_expresion = self.sent_expresion()
@@ -294,13 +295,13 @@ class SyntacticAnlyzer:
         return nodo_repeticion
 
     def sent_in(self):
-        nodo_sent_in = Nodo('-in')
+        nodo_sent_in = Nodo('')
         nodo_in = Nodo('cin')
         nodo_sent_in.add_branch(nodo_in)
         self.nextToken()
         if self.getTokenActual().type == 'ID':
             nodo_identificador = Nodo(
-                '-identificador', [Nodo(self.getTokenActual().value)])
+                '', [Nodo(self.getTokenActual().value)])
             nodo_sent_in.add_branch(nodo_identificador)
             self.nextToken()
         else:
@@ -312,7 +313,7 @@ class SyntacticAnlyzer:
         return nodo_sent_in
 
     def sent_out(self):
-        nodo_sent_out = Nodo('-out')
+        nodo_sent_out = Nodo('')
         nodo_cout = Nodo('cout')
         nodo_sent_out.add_branch(nodo_cout)
         self.nextToken()
@@ -326,12 +327,13 @@ class SyntacticAnlyzer:
         return nodo_sent_out
 
     def expresion_simple(self):
-        nodo_expresion_simple = Nodo('-exp_simple')
+        nodo_expresion_simple = Nodo('')
         nodo_termino_1 = self.termino()
         nodo_expresion_simple.add_branch(nodo_termino_1)
         while self.getTokenActual().value in ['+', '-', '++', '--']:
-            nodo_suma_op = Nodo(
-                '-suma', [Nodo(self.getTokenActual().value)])
+            # nodo_suma_op = Nodo(
+            #     '-suma', [Nodo(self.getTokenActual().value)])
+            nodo_suma_op = Nodo('',[Nodo(self.getTokenActual().value)])
             nodo_expresion_simple.add_branch(nodo_suma_op)
             self.nextToken()
             nodo_termino_2 = self.termino()
@@ -339,12 +341,12 @@ class SyntacticAnlyzer:
         return nodo_expresion_simple
 
     def termino(self):
-        nodo_termino = Nodo('-termino')
+        nodo_termino = Nodo('')
         nodo_factor_1 = self.factor()
         nodo_termino.add_branch(nodo_factor_1)
         while self.getTokenActual().value in ['*', '/', '%']:
             nodo_mult_op = Nodo(
-                '-mult', [Nodo(self.getTokenActual().value)])
+                '', [Nodo(self.getTokenActual().value)])
             nodo_termino.add_branch(nodo_mult_op)
             self.nextToken()
             nodo_factor_2 = self.factor()
@@ -363,12 +365,12 @@ class SyntacticAnlyzer:
                 self.error(
                     f"Se esperaba ')' en {self.getTokenActual().value}.")
         elif self.getTokenActual().type in ['INTEGER', 'FLOAT']:
-            nodo_numero = Nodo('-numero', [Nodo(self.getTokenActual().value)])
+            nodo_numero = Nodo('', [Nodo(self.getTokenActual().value)])
             nodo_factor.add_branch(nodo_numero)
             self.nextToken()
         elif self.getTokenActual().type == 'ID':
             nodo_identificador = Nodo(
-                '-identificador', [Nodo(self.getTokenActual().value)])
+                '', [Nodo(self.getTokenActual().value)])
             nodo_factor.add_branch(nodo_identificador)
             self.nextToken()
         else:
@@ -395,11 +397,11 @@ def generateTree():
         sintactico = arbol_sintactico.analisis_sintactico()
         print(generar_arbol_sintaxis(sintactico))
         # Generar árbol sintáctico en un archivo de texto
-        with open('tree_syntactic.txt', 'w') as archivo:
+        with open(f'{sys.argv[1].split(".")[0]}_tree.txt', 'w') as archivo:
             archivo.write(generar_arbol_sintaxis(sintactico))
 
         # Guardar errores sintácticos en otro archivo
-        with open('errors_syntactic.txt', 'w') as archivo:
+        with open(f'{sys.argv[1].split(".")[0]}_errors_syntactic.txt', 'w') as archivo:
             for error in arbol_sintactico.errores:
                 archivo.write(error + '\n')
     else:
