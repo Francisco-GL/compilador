@@ -110,7 +110,7 @@ class SyntacticAnlyzer:
         return nodo_declaracion
 
     def lista_sentencias(self):
-        nodo_lista_sentencias = Nodo('-sentencias')
+        nodo_lista_sentencias = Nodo()
         while self.getTokenActual().type != 'ERROR' and self.getTokenActual().value != 'end':
             if self.getTokenActual().value in ['if', 'while', 'do', 'cin', 'cout', 'ID']:
                 nodo_sent = Nodo('-sentencia')
@@ -170,7 +170,7 @@ class SyntacticAnlyzer:
         return nodo_asignacion
 
     def sent_expresion(self):
-        nodo_sent_expresion = Nodo('-expresion')
+        nodo_sent_expresion = Nodo('')
         if self.getTokenActual().value != ';':
             nodo_expresion = self.expresion()
             nodo_sent_expresion.add_branch(nodo_expresion)
@@ -197,31 +197,31 @@ class SyntacticAnlyzer:
     def seleccion(self):
         nodo_seleccion = Nodo('-seleccion')
         self.nextToken()
-        nodo_if = Nodo('if')
+        nodo_if = Nodo('( if )')
         nodo_seleccion.add_branch(nodo_if)
         nodo_expresion = self.expresion()
         nodo_seleccion.add_branch(nodo_expresion)
         while self.getTokenActual().type in ['ID'] or self.getTokenActual().value in ['cout', 'cin', 'if', 'do', 'while', 'int', 'float']:
-            nodo_sent = Nodo('-sentencia')
+            nodo_sent = Nodo('')
             nodo_seleccion.add_branch(nodo_sent)
             if self.getTokenActual().type in ['ID']:
                 nodo_sentencia = self.sentencia()
                 nodo_sent.add_branch(nodo_sentencia)
             if self.getTokenActual().value in ['cout', 'cin', 'if', 'do', 'while']:
-                nodo_sent = Nodo('-sentencia')
+                nodo_sent = Nodo('')
                 nodo_seleccion.add_branch(nodo_sent)
                 nodo_sentencia = self.sentencia()
                 nodo_sent.add_branch(nodo_sentencia)
         if self.getTokenActual().value == 'else':
-            nodo_else = Nodo('else')
-            nodo_sent = Nodo('-sentencia')
+            nodo_else = Nodo('( else )')
+            nodo_sent = Nodo('')
             nodo_seleccion.add_branch(nodo_else)
             nodo_else.add_branch(nodo_sent)
             self.nextToken()
             nodo_sentencia_else = self.sentencia()
             nodo_sent.add_branch(nodo_sentencia_else)
         if self.getTokenActual().value == 'end':
-            nodo_end = Nodo('end')
+            nodo_end = Nodo('( end )')
             nodo_seleccion.add_branch(nodo_end)
             self.nextToken()
         else:
@@ -231,7 +231,7 @@ class SyntacticAnlyzer:
 
     def iteracion(self):
         nodo_iteracion = Nodo('-iteracion')
-        nodo_while = Nodo('while')
+        nodo_while = Nodo('( while )')
         nodo_iteracion.add_branch(nodo_while)
         self.nextToken()
         nodo_expresion = self.expresion()
@@ -242,13 +242,13 @@ class SyntacticAnlyzer:
             self.error(
                 f"Se esperaba 'llave' en {self.getTokenActual().value}.")
         while self.getTokenActual().type in ['ID'] or self.getTokenActual().value in ['cout', 'cin', 'if', 'do', 'while', 'int', 'float']:
-            nodo_sent = Nodo('-sentencia')
+            nodo_sent = Nodo('')
             nodo_iteracion.add_branch(nodo_sent)
             if self.getTokenActual().type in ['ID']:
                 nodo_sentencia = self.sentencia()
                 nodo_sent.add_branch(nodo_sentencia)
             if self.getTokenActual().value in ['cout', 'cin', 'if', 'do', 'while']:
-                nodo_sent = Nodo('-sentencia')
+                nodo_sent = Nodo('')
                 nodo_iteracion.add_branch(nodo_sent)
                 nodo_sentencia = self.sentencia()
                 nodo_sent.add_branch(nodo_sentencia)
@@ -261,17 +261,17 @@ class SyntacticAnlyzer:
 
     def repeticion(self):
         nodo_repeticion = Nodo('-repeticion')
-        nodo_do = Nodo('do')
+        nodo_do = Nodo('( do )')
         nodo_repeticion.add_branch(nodo_do)
         self.nextToken()
         while self.getTokenActual().type in ['ID'] or self.getTokenActual().value in ['cout', 'cin', 'if', 'do', 'while', 'int', 'float']:
             if self.getTokenActual().type in ['ID']:
-                nodo_sent = Nodo('-sentencia')
+                nodo_sent = Nodo('')
                 nodo_repeticion.add_branch(nodo_sent)
                 nodo_sentencia = self.sentencia()
                 nodo_sent.add_branch(nodo_sentencia)
             if self.getTokenActual().value in ['cout', 'cin', 'if', 'do', 'while']:
-                nodo_sent = Nodo('-sentencia')
+                nodo_sent = Nodo('')
                 nodo_repeticion.add_branch(nodo_sent)
                 nodo_sentencia = self.sentencia()
                 nodo_sent.add_branch(nodo_sentencia)
@@ -279,7 +279,7 @@ class SyntacticAnlyzer:
                 nodo_declaracion = self.declaracion()
                 nodo_repeticion.add_branch(nodo_declaracion)
         if self.getTokenActual().value == 'until':
-            nodo_until = Nodo('until')
+            nodo_until = Nodo('( until )')
             nodo_repeticion.add_branch(nodo_until)
             self.nextToken()
             nodo_expresion = self.expresion()
@@ -296,7 +296,7 @@ class SyntacticAnlyzer:
 
     def sent_in(self):
         nodo_sent_in = Nodo('')
-        nodo_in = Nodo('cin')
+        nodo_in = Nodo('( cin )')
         nodo_sent_in.add_branch(nodo_in)
         self.nextToken()
         if self.getTokenActual().type == 'ID':
@@ -314,7 +314,7 @@ class SyntacticAnlyzer:
 
     def sent_out(self):
         nodo_sent_out = Nodo('')
-        nodo_cout = Nodo('cout')
+        nodo_cout = Nodo('( cout )')
         nodo_sent_out.add_branch(nodo_cout)
         self.nextToken()
         nodo_expresion = self.expresion()
